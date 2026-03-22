@@ -656,9 +656,10 @@ class App(tk.Tk):
 
         self.group_lb = tk.Listbox(
             left, bg="#181825", fg="#cdd6f4",
-            selectbackground="#313244", selectforeground="#cba6f7",
+            selectbackground="#89b4fa", selectforeground="#1e1e2e",
             font=("Segoe UI", 9), relief=tk.FLAT, activestyle="none",
-            highlightthickness=0, exportselection=False
+            highlightthickness=2, highlightbackground="#313244",
+            highlightcolor="#89b4fa", exportselection=False
         )
         gsb = ttk.Scrollbar(left, orient=tk.VERTICAL, command=self.group_lb.yview)
         self.group_lb.configure(yscrollcommand=gsb.set)
@@ -702,9 +703,10 @@ class App(tk.Tk):
         ml_inner.pack(fill=tk.BOTH, expand=True)
         self.mail_lb = tk.Listbox(
             ml_inner, bg="#181825", fg="#cdd6f4",
-            selectbackground="#45475a", selectforeground="#f9e2af",
+            selectbackground="#a6e3a1", selectforeground="#1e1e2e",
             font=("Consolas", 9), relief=tk.FLAT, activestyle="none",
-            highlightthickness=0, exportselection=False,
+            highlightthickness=2, highlightbackground="#313244",
+            highlightcolor="#a6e3a1", exportselection=False,
             selectmode=tk.EXTENDED
         )
         msb = ttk.Scrollbar(ml_inner, orient=tk.VERTICAL, command=self.mail_lb.yview)
@@ -771,9 +773,21 @@ class App(tk.Tk):
             for key in ("n", "N"):
                 widget.bind(f"<{key}>", lambda e: self._do_skip(), add="+")
             widget.bind("<Control-a>", lambda e: self._select_all_mails(), add="+")
-        self.bind("<Down>",   lambda e: self._nav(+1))
-        self.bind("<Up>",     lambda e: self._nav(-1))
+
+        # Fensterlevel Up/Down nur wenn kein Listbox fokussiert ist
+        self.bind("<Down>",   lambda e: None if self.focus_get() in (
+                              self.group_lb, self.mail_lb) else self._nav(+1))
+        self.bind("<Up>",     lambda e: None if self.focus_get() in (
+                              self.group_lb, self.mail_lb) else self._nav(-1))
         self.bind("<Escape>", lambda e: self.focus_set())
+
+        # Rechts: Gruppen → Mail-Liste; Links: Mail-Liste → Gruppen
+        self.group_lb.bind("<Right>", lambda e: self._focus_mail_list())
+        self.mail_lb.bind("<Left>",   lambda e: self._focus_group_list())
+
+        # Gruppenliste: Keyboard-Navigation nach oben/unten syncen
+        self.group_lb.bind("<Down>", lambda e: self.after(0, self._sync_group_selection), add="+")
+        self.group_lb.bind("<Up>",   lambda e: self.after(0, self._sync_group_selection), add="+")
 
     # ── Connect & Load ────────────────────────
 
@@ -955,6 +969,28 @@ class App(tk.Tk):
 
     def _nav(self, delta: int):
         self._select(self._current_display_idx + delta)
+
+    def _focus_mail_list(self):
+        """Pfeil-Rechts: Fokus von Gruppenliste → Mail-Liste."""
+        if not self.current_mail_items:
+            return
+        self.mail_lb.focus_set()
+        if not self.mail_lb.curselection():
+            self.mail_lb.selection_set(0)
+            self.mail_lb.see(0)
+            self._show_preview(self.current_mail_items[0])
+            self.sel_info_var.set(f"1 von {len(self.current_mail_items)} ausgewählt")
+
+    def _focus_group_list(self):
+        """Pfeil-Links: Fokus von Mail-Liste → Gruppenliste."""
+        self.group_lb.focus_set()
+        self.group_lb.see(self._current_display_idx)
+
+    def _sync_group_selection(self):
+        """Nach Tastatur-Navigation in group_lb die Ansicht synchronisieren."""
+        sel = self.group_lb.curselection()
+        if sel and sel[0] != self._current_display_idx:
+            self._select(sel[0])
 
     # ── Mail Preview & Selection ──────────────
 
