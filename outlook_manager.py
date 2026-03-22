@@ -932,24 +932,34 @@ class App(tk.Tk):
         n = len(data["items"])
         self.sender_var.set(f"{data['name']}  <{email}>  — {n} Mail(s)")
 
-        self.current_mail_items = sorted(
-            data["items"],
-            key=lambda m: getattr(m, "ReceivedTime", datetime.min),
-            reverse=True
-        )
+        def _safe_time(m):
+            try:
+                return m.ReceivedTime
+            except Exception:
+                return datetime.min
+
+        self.current_mail_items = sorted(data["items"], key=_safe_time, reverse=True)
 
         self.mail_lb.delete(0, tk.END)
+        valid_items = []
         for item in self.current_mail_items:
             try:
                 rt = item.ReceivedTime
                 ds = f"{rt.year}-{rt.month:02d}-{rt.day:02d}"
                 subj = (getattr(item, "Subject", "") or "(kein Betreff)")[:95]
                 self.mail_lb.insert(tk.END, f"  {ds}  {subj}")
+                valid_items.append(item)
             except Exception:
-                self.mail_lb.insert(tk.END, "  (Fehler)")
+                pass  # abgestandene Referenz — überspringen
+        self.current_mail_items = valid_items
 
         # Suggestion
-        subjects = [getattr(it, "Subject", "") or "" for it in self.current_mail_items]
+        subjects = []
+        for it in self.current_mail_items:
+            try:
+                subjects.append(getattr(it, "Subject", "") or "")
+            except Exception:
+                pass
         sug = self.suggeng.suggest(email, data["name"], subjects)
 
         if sug.confidence == Confidence.HIGH:
