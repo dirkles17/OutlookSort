@@ -511,7 +511,10 @@ class OutlookBridge:
             return self._folder_cache[path]
         cur = self.inbox
         for part in path.split("/"):
-            cur = cur.Folders.Item(part)
+            try:
+                cur = cur.Folders.Item(part)
+            except Exception:
+                cur = cur.Folders.Add(part)
         self._folder_cache[path] = cur
         return cur
 
