@@ -1077,7 +1077,16 @@ class App(tk.Tk):
         target, is_partial = self._get_target_items()
         if not target:
             return
-        n     = len(target)
+        n = len(target)
+        # Einzelne Mail aktiv → sofort löschen, kein Dialog
+        if n == 1 and is_partial:
+            deleted, errors = self.bridge.delete_items(target)
+            self.status_var.set(f"🗑 1 Mail gelöscht")
+            self._remove_items_from_group(target)
+            if errors:
+                messagebox.showwarning("Fehler", "Mail konnte nicht gelöscht werden.")
+            return
+        # Mehrere oder ganze Gruppe → Bestätigung
         label = "ausgewählte" if is_partial else "alle"
         if not messagebox.askyesno("Löschen?",
                                     f"{n} {label} Mail(s) von '{email}' löschen?"):

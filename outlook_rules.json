@@ -380,11 +380,6 @@
     "dest": ""
   },
   {
-    "pattern": "news@de.newsletter-fotocommunity.net",
-    "action": "delete",
-    "dest": ""
-  },
-  {
     "pattern": "no-reply@transkriptor.com",
     "action": "delete",
     "dest": ""
@@ -396,16 +391,6 @@
   },
   {
     "pattern": "googlealerts-noreply@google.com",
-    "action": "delete",
-    "dest": ""
-  },
-  {
-    "pattern": "no-reply@email.octoeverywhere.com",
-    "action": "delete",
-    "dest": ""
-  },
-  {
-    "pattern": "families-noreply@google.com",
     "action": "delete",
     "dest": ""
   },
@@ -455,11 +440,6 @@
     "dest": "Finanzen/Bank und Versicherung"
   },
   {
-    "pattern": "noreply@information.axa.de",
-    "action": "move",
-    "dest": "Finanzen/Bank und Versicherung"
-  },
-  {
     "pattern": "alocilewome55@gmail.com",
     "action": "delete",
     "dest": ""
@@ -481,11 +461,6 @@
   },
   {
     "pattern": "infoservice@infoservice.heise.de",
-    "action": "delete",
-    "dest": ""
-  },
-  {
-    "pattern": "noreply@sams-on.de",
     "action": "delete",
     "dest": ""
   },
@@ -570,11 +545,6 @@
     "dest": "Persönlich/Genealogie"
   },
   {
-    "pattern": "info@voba-ermstal-alb.de",
-    "action": "move",
-    "dest": "Finanzen/Bank und Versicherung"
-  },
-  {
     "pattern": "joshua.kehl@voba-ermstal-alb.de",
     "action": "move",
     "dest": "Finanzen/Bank und Versicherung"
@@ -588,5 +558,80 @@
     "pattern": "direktonlineteam@vhv.de",
     "action": "move",
     "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "info@voba-ermstal-alb.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@email.octoeverywhere.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "notification@komoot.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "groupupdates@facebookmail.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "news@de.newsletter-fotocommunity.net",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "families-noreply@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "rab.servicecenter@deutschebahn.com",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "feucht.tanja@bad-urach.de",
+    "action": "move",
+    "dest": "Immobilien/Wittlingen Schwalbenstr"
+  },
+  {
+    "pattern": "info@dachboxen-billiger.de",
+    "action": "move",
+    "dest": "Shopping/Shops und Einkauf"
+  },
+  {
+    "pattern": "noreply@sams-on.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "change@e.change.org",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "rueckgabe@amazon.de",
+    "action": "move",
+    "dest": "Shopping/Amazon"
+  },
+  {
+    "pattern": "paypal@paypal.com",
+    "action": "move",
+    "dest": "Finanzen/Zahlungen"
+  },
+  {
+    "pattern": "noreply@information.axa.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "aktion@hdi.de",
+    "action": "delete",
+    "dest": ""
   }
 ]
