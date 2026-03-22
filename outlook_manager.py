@@ -781,6 +781,9 @@ class App(tk.Tk):
         tk.Button(bar, text=" 🧠 Keywords lernen ", command=self._open_learner,
                   bg="#f9e2af", fg="#1e1e2e", relief=tk.FLAT,
                   font=("Segoe UI", 9), padx=6).pack(side=tk.LEFT, padx=2)
+        tk.Button(bar, text=" 📁 Kategorien ", command=self._open_folder_manager,
+                  bg="#cba6f7", fg="#1e1e2e", relief=tk.FLAT,
+                  font=("Segoe UI", 9), padx=6).pack(side=tk.LEFT, padx=2)
 
         self.status_var = tk.StringVar(value="Verbinde…")
         tk.Label(bar, textvariable=self.status_var, bg="#181825", fg="#f38ba8",
@@ -896,8 +899,9 @@ class App(tk.Tk):
         tk.Label(abar, text="Zielordner:", bg="#1e1e2e", fg="#a6adc8",
                  font=("Segoe UI", 9)).pack(side=tk.LEFT)
         self.dest_var = tk.StringVar()
-        ttk.Combobox(abar, textvariable=self.dest_var, values=ALL_FOLDERS,
-                     width=36, font=("Segoe UI", 9)).pack(side=tk.LEFT, padx=(4, 8))
+        self.dest_combo = ttk.Combobox(abar, textvariable=self.dest_var, values=ALL_FOLDERS,
+                                       width=36, font=("Segoe UI", 9))
+        self.dest_combo.pack(side=tk.LEFT, padx=(4, 8))
 
         bs = {"relief": tk.FLAT, "font": ("Segoe UI", 9, "bold"), "padx": 8, "pady": 4}
         tk.Button(abar, text="[J] Auswahl verschieben", bg="#a6e3a1", fg="#1e1e2e",
@@ -1492,6 +1496,204 @@ class App(tk.Tk):
         tk.Button(win, text="Schließen", command=win.destroy,
                   bg="#313244", fg="#cdd6f4", relief=tk.FLAT,
                   font=("Segoe UI", 9), padx=8).pack(pady=6)
+
+    # ── Folder Manager ────────────────────────
+
+    def _rebuild_folder_list(self):
+        """Liest alle Outlook-Ordner rekursiv und aktualisiert ALL_FOLDERS + Combobox."""
+        paths = []
+        def _walk(folder, prefix=""):
+            for sub in folder.Folders:
+                path = f"{prefix}/{sub.Name}" if prefix else sub.Name
+                paths.append(path)
+                _walk(sub, path)
+        try:
+            _walk(self.bridge.inbox)
+        except Exception:
+            return
+        paths.sort()
+        ALL_FOLDERS.clear()
+        ALL_FOLDERS.extend(paths)
+        try:
+            self.dest_combo["values"] = paths
+        except Exception:
+            pass
+
+    def _open_folder_manager(self):
+        if not self.bridge.inbox:
+            messagebox.showerror("Fehler", "Nicht mit Outlook verbunden.")
+            return
+
+        win = tk.Toplevel(self)
+        win.title("📁 Kategorien verwalten")
+        win.geometry("560x620")
+        win.configure(bg="#1e1e2e")
+        win.resizable(True, True)
+
+        tk.Label(win, text="Kategorien / Ordner",
+                 bg="#1e1e2e", fg="#cba6f7",
+                 font=("Segoe UI", 11, "bold")).pack(anchor=tk.W, padx=12, pady=(10, 2))
+        tk.Label(win, text="Ordner auswählen → Unterordner anlegen, umbenennen oder löschen.",
+                 bg="#1e1e2e", fg="#a6adc8",
+                 font=("Segoe UI", 9, "italic")).pack(anchor=tk.W, padx=12, pady=(0, 6))
+
+        # ── Treeview ──────────────────────────
+        tree_frame = tk.Frame(win, bg="#1e1e2e")
+        tree_frame.pack(fill=tk.BOTH, expand=True, padx=12, pady=(0, 4))
+
+        style = ttk.Style()
+        style.configure("FM.Treeview",
+                        background="#181825", foreground="#cdd6f4",
+                        fieldbackground="#181825", rowheight=22,
+                        font=("Segoe UI", 9))
+        style.configure("FM.Treeview.Heading",
+                        background="#313244", foreground="#89b4fa",
+                        font=("Segoe UI", 9, "bold"))
+        style.map("FM.Treeview", background=[("selected", "#89b4fa")],
+                  foreground=[("selected", "#1e1e2e")])
+
+        tree = ttk.Treeview(tree_frame, style="FM.Treeview",
+                            columns=("mails",), show="tree headings")
+        tree.heading("#0",     text="Ordner")
+        tree.heading("mails",  text="Mails")
+        tree.column("#0",      width=380, stretch=True)
+        tree.column("mails",   width=60,  anchor=tk.CENTER, stretch=False)
+        vsb = ttk.Scrollbar(tree_frame, orient=tk.VERTICAL, command=tree.yview)
+        tree.configure(yscrollcommand=vsb.set)
+        tree.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        vsb.pack(side=tk.RIGHT, fill=tk.Y)
+
+        # node_id → outlook folder object
+        _folder_map: dict = {}
+
+        def _add_node(parent_node, folder, prefix=""):
+            name  = folder.Name
+            path  = f"{prefix}/{name}" if prefix else name
+            try:
+                cnt = folder.Items.Count
+            except Exception:
+                cnt = "?"
+            node = tree.insert(parent_node, tk.END, text=f"  {name}",
+                               values=(cnt,), open=False)
+            _folder_map[node] = (folder, path)
+            for sub in folder.Folders:
+                _add_node(node, sub, path)
+
+        def _load():
+            tree.delete(*tree.get_children())
+            _folder_map.clear()
+            try:
+                for sub in self.bridge.inbox.Folders:
+                    _add_node("", sub)
+            except Exception as e:
+                messagebox.showerror("Fehler", str(e), parent=win)
+
+        _load()
+
+        # ── Status label ──────────────────────
+        status_var = tk.StringVar(value="")
+        tk.Label(win, textvariable=status_var, bg="#1e1e2e", fg="#a6e3a1",
+                 font=("Segoe UI", 9)).pack(anchor=tk.W, padx=14)
+
+        # ── Neu-Eingabe ───────────────────────
+        new_frame = tk.Frame(win, bg="#1e1e2e")
+        new_frame.pack(fill=tk.X, padx=12, pady=(4, 2))
+        tk.Label(new_frame, text="Neuer Ordnername:", bg="#1e1e2e", fg="#a6adc8",
+                 font=("Segoe UI", 9)).pack(side=tk.LEFT)
+        new_name_var = tk.StringVar()
+        tk.Entry(new_frame, textvariable=new_name_var, bg="#313244", fg="#cdd6f4",
+                 font=("Segoe UI", 9), relief=tk.FLAT, width=28,
+                 insertbackground="#cdd6f4").pack(side=tk.LEFT, padx=(6, 0))
+
+        # ── Buttons ───────────────────────────
+        bbar = tk.Frame(win, bg="#1e1e2e", pady=6)
+        bbar.pack(fill=tk.X, padx=12)
+
+        def _selected():
+            sel = tree.selection()
+            return (_folder_map.get(sel[0]) if sel else None)
+
+        def _create_sub():
+            name = new_name_var.get().strip()
+            if not name:
+                messagebox.showwarning("Name fehlt", "Bitte Ordnernamen eingeben.", parent=win)
+                return
+            sel = _selected()
+            if sel is None:
+                # Erstelle direkt unter Posteingang
+                parent_folder = self.bridge.inbox
+                parent_path   = ""
+            else:
+                parent_folder, parent_path = sel
+            try:
+                parent_folder.Folders.Add(name)
+                new_name_var.set("")
+                _load()
+                self._rebuild_folder_list()
+                path = f"{parent_path}/{name}" if parent_path else name
+                status_var.set(f"✓ Erstellt: {path}")
+            except Exception as e:
+                messagebox.showerror("Fehler", str(e), parent=win)
+
+        def _rename():
+            sel = _selected()
+            if sel is None:
+                messagebox.showwarning("Kein Ordner", "Bitte Ordner auswählen.", parent=win)
+                return
+            folder, path = sel
+            new_name = new_name_var.get().strip()
+            if not new_name:
+                messagebox.showwarning("Name fehlt", "Bitte neuen Namen eingeben.", parent=win)
+                return
+            try:
+                old_name = folder.Name
+                folder.Name = new_name
+                new_name_var.set("")
+                _load()
+                self._rebuild_folder_list()
+                status_var.set(f"✓ Umbenannt: {old_name} → {new_name}")
+            except Exception as e:
+                messagebox.showerror("Fehler", str(e), parent=win)
+
+        def _delete():
+            sel = _selected()
+            if sel is None:
+                messagebox.showwarning("Kein Ordner", "Bitte Ordner auswählen.", parent=win)
+                return
+            folder, path = sel
+            try:
+                cnt = folder.Items.Count
+            except Exception:
+                cnt = 0
+            warn = f'Ordner "{path}" loeschen?'
+            if cnt > 0:
+                warn += f"\n\n  Enthaelt {cnt} Mail(s) - diese werden in den Papierkorb verschoben!"
+            if not messagebox.askyesno("Löschen?", warn, parent=win):
+                return
+            try:
+                folder.Delete()
+                _load()
+                self._rebuild_folder_list()
+                status_var.set(f"🗑 Gelöscht: {path}")
+            except Exception as e:
+                messagebox.showerror("Fehler", str(e), parent=win)
+
+        def _refresh():
+            _load()
+            self._rebuild_folder_list()
+            status_var.set("↻ Aktualisiert")
+
+        btn_cfg = dict(relief=tk.FLAT, font=("Segoe UI", 9, "bold"), padx=8, pady=4)
+        tk.Button(bbar, text="+ Unterordner anlegen", bg="#a6e3a1", fg="#1e1e2e",
+                  command=_create_sub, **btn_cfg).pack(side=tk.LEFT, padx=(0, 4))
+        tk.Button(bbar, text="✏ Umbenennen", bg="#f9e2af", fg="#1e1e2e",
+                  command=_rename, **btn_cfg).pack(side=tk.LEFT, padx=4)
+        tk.Button(bbar, text="🗑 Löschen", bg="#f38ba8", fg="#1e1e2e",
+                  command=_delete, **btn_cfg).pack(side=tk.LEFT, padx=4)
+        tk.Button(bbar, text="↻ Aktualisieren", bg="#313244", fg="#cdd6f4",
+                  command=_refresh, **btn_cfg).pack(side=tk.LEFT, padx=4)
+        tk.Button(bbar, text="Schließen", bg="#313244", fg="#cdd6f4",
+                  command=win.destroy, **btn_cfg).pack(side=tk.RIGHT)
 
     # ── Keyword Learner Dialog ─────────────────
 
