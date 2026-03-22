@@ -763,16 +763,17 @@ class App(tk.Tk):
                       command=lambda p=path: self._quick_move(p)).pack(side=tk.LEFT, padx=1)
 
     def _bind_keys(self):
-        for key in ("j", "J"):
-            self.bind(f"<{key}>", lambda e: self._do_move())
-        for key in ("l", "L"):
-            self.bind(f"<{key}>", lambda e: self._do_delete())
-        for key in ("n", "N"):
-            self.bind(f"<{key}>", lambda e: self._do_skip())
-        self.bind("<Down>",      lambda e: self._nav(+1))
-        self.bind("<Up>",        lambda e: self._nav(-1))
-        self.bind("<Escape>",    lambda e: self.focus_set())
-        self.bind("<Control-a>", lambda e: self._select_all_mails())
+        for widget in (self, self.mail_lb, self.group_lb):
+            for key in ("j", "J"):
+                widget.bind(f"<{key}>", lambda e: self._do_move(), add="+")
+            for key in ("l", "L"):
+                widget.bind(f"<{key}>", lambda e: self._do_delete(), add="+")
+            for key in ("n", "N"):
+                widget.bind(f"<{key}>", lambda e: self._do_skip(), add="+")
+            widget.bind("<Control-a>", lambda e: self._select_all_mails(), add="+")
+        self.bind("<Down>",   lambda e: self._nav(+1))
+        self.bind("<Up>",     lambda e: self._nav(-1))
+        self.bind("<Escape>", lambda e: self.focus_set())
 
     # ── Connect & Load ────────────────────────
 
