@@ -1,0 +1,517 @@
+[
+  {
+    "pattern": "no-reply@zinia.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "bennoah.sickinger@hdi.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "no-reply@sim24.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "roemerstein@ris-portal.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "americanexpress@welcome.americanexpress.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@sdui.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "newsletter@forum-impfen.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "notify2@myheritage.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply.invitations@trustpilotmail.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info@afatek.com",
+    "action": "move",
+    "dest": "Finanzen/Rechnungen"
+  },
+  {
+    "pattern": "e-store@samsung.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "signin-noreply@teamviewer.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@bitwarden.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "swpplus@mail-swp.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "do_not_reply@email.meta.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "hello@engagement.tibber.com",
+    "action": "move",
+    "dest": "Haus und Energie"
+  },
+  {
+    "pattern": "dianawirth@gmx.de",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "googleplay-noreply@google.com",
+    "action": "move",
+    "dest": "Hobby"
+  },
+  {
+    "pattern": "mueller.susanne@bad-urach.de",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "marketing@deovr.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "marketing@newsletter.anycubic.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "newsletter@lipno.info",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "nicht-antworten@meine.aok.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "vivino@m.vivino.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "news@reply.tom-tailor.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply-local-guides@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "security@mail.instagram.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "reiseanfrage@newsletter.schiff-ahoi.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@geeksforgeeks.org",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "supportde@i.vacanceselect.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "tibberstore@engagement.tibber.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "blink@hello.blink.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "outcollaborate@team.wrike.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "servicecenter.rt@komm.one",
+    "action": "move",
+    "dest": "Haus und Energie"
+  },
+  {
+    "pattern": "noreply@dhl.de",
+    "action": "move",
+    "dest": "Shopping/Pakete und Lieferungen"
+  },
+  {
+    "pattern": "help@acct.epicgames.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "hello@tibber.com",
+    "action": "move",
+    "dest": "Haus und Energie"
+  },
+  {
+    "pattern": "angebote@news.strato.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply@paketankuendigung.myhermes.de",
+    "action": "move",
+    "dest": "Shopping/Pakete und Lieferungen"
+  },
+  {
+    "pattern": "no-reply@account.blink.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info@reutter-steinmetz.de",
+    "action": "move",
+    "dest": "Immobilien/Wittlingen Schwalbenstr"
+  },
+  {
+    "pattern": "info@ebkolching.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "goetz@roemerstein.de",
+    "action": "move",
+    "dest": "Ehrenamt/Ortschaftsrat"
+  },
+  {
+    "pattern": "maker@hello.design.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "sa.noreply@samsung-mail.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply@discord.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@connect.lieferando.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info@urologie-am-lammgarten.de",
+    "action": "move",
+    "dest": "Persönlich/Gesundheit"
+  },
+  {
+    "pattern": "info@batterie24.de",
+    "action": "move",
+    "dest": "Shopping/Shops und Einkauf"
+  },
+  {
+    "pattern": "shop@grillfuerst.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "receipts@openrouter.ai",
+    "action": "move",
+    "dest": "Digital/Software und Lizenzen"
+  },
+  {
+    "pattern": "search-api@brave.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "googlebusinessprofile-noreply@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info@hotel-alia.it",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply@wikiloc.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info@pocketcasts.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info@newsletter.profi-winkler.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply-maps-timeline@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "calendar-notification@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "firebase-noreply@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply@notebooksbilliger.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "news@info.hd-plus.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "system@wv.jugend-forscht.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "info-paket@myhermes.de",
+    "action": "move",
+    "dest": "Shopping/Pakete und Lieferungen"
+  },
+  {
+    "pattern": "info@hausarztpraxis-schiller.de",
+    "action": "move",
+    "dest": "Persönlich/Gesundheit"
+  },
+  {
+    "pattern": "service-news@1und1.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "rechnungsstelle@1und1.de",
+    "action": "move",
+    "dest": "Online-Dienste/Telekom und Anbieter"
+  },
+  {
+    "pattern": "no-reply@blinkforhome.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "infodienste@kultus-bw.de",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "no-reply@hd-plus.de",
+    "action": "move",
+    "dest": "Online-Dienste"
+  },
+  {
+    "pattern": "an.hu@web.de",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "info@lipnocard.cz",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "simone.langhauser@bromsolutions.de",
+    "action": "move",
+    "dest": "Beruf/Bewerbung"
+  },
+  {
+    "pattern": "anjawebb@outlook.com",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "fr@geg-bu.de",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "no-reply-ibbz-azccaotlihlmeoq2q@mail.anthropic.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "news@de.newsletter-fotocommunity.net",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@transkriptor.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@communication.home-connect.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "googlealerts-noreply@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@email.octoeverywhere.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "families-noreply@google.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "email@update.geocaching.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "newsletter@steadyhq.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "christoph.behler@eu.cc-link.org",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "uber@uber.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply=quoka.de@mailgun.quoka.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply@h5.hilton.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "customerrelations@stanstedexpressticketing.co.uk",
+    "action": "move",
+    "dest": "Persönlich/Urlaub und Reise"
+  },
+  {
+    "pattern": "myryanair@ryanair.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "burak.sarma@axa.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "noreply@information.axa.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "alocilewome55@gmail.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "teresabrendle@yahoo.de",
+    "action": "move",
+    "dest": "Kinder und Schule"
+  },
+  {
+    "pattern": "service@notebooksbilliger.de",
+    "action": "move",
+    "dest": "Shopping/Shops und Einkauf"
+  },
+  {
+    "pattern": "gaming@nvgaming.nvidia.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "infoservice@infoservice.heise.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "noreply@sams-on.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "webservice@aohostels.com",
+    "action": "move",
+    "dest": "Persönlich/Urlaub und Reise"
+  },
+  {
+    "pattern": "adminemail@aferry.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "kundenservice@gartenfachmarkt24.de",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "pragmaticengineer+the-pulse@substack.com",
+    "action": "delete",
+    "dest": ""
+  },
+  {
+    "pattern": "no-reply@simplybook.me",
+    "action": "move",
+    "dest": "Persönlich/Urlaub und Reise"
+  }
+]

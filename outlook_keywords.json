@@ -1,0 +1,197 @@
+[
+  {
+    "keywords": ["rechnung", "invoice", "beleg", "quittung", "abrechnung", "billing", "ihre rechnung"],
+    "folder": "Finanzen/Rechnungen",
+    "field": "subject"
+  },
+  {
+    "keywords": ["zahlung", "payment", "überweisung", "transaktion", "lastschrift", "abbuchung", "zahlungsbeleg", "zahlungsbestätigung"],
+    "folder": "Finanzen/Zahlungen",
+    "field": "subject"
+  },
+  {
+    "keywords": ["kreditkarte", "kontoauszug", "depot", "wertpapier", "sparkasse", "volksbank", "commerzbank", "postbank", "ing", "comdirect"],
+    "folder": "Finanzen/Bank und Versicherung",
+    "field": "sender"
+  },
+  {
+    "keywords": ["versicherung", "hdi", "allianz", "axa", "generali", "ergo", "zurich", "wüstenrot", "wuestenrot"],
+    "folder": "Finanzen/Bank und Versicherung",
+    "field": "sender"
+  },
+  {
+    "keywords": ["steuer", "steuererklärung", "finanzamt", "elster", "steuerbescheid"],
+    "folder": "Persönlich/Steuer",
+    "field": "subject"
+  },
+  {
+    "keywords": ["amazon", "amzn"],
+    "folder": "Shopping/Amazon",
+    "field": "sender"
+  },
+  {
+    "keywords": ["ihre bestellung", "bestellbestätigung", "auftragsbestätigung", "order confirmation", "bestellung eingegangen"],
+    "folder": "Shopping/Shops und Einkauf",
+    "field": "subject"
+  },
+  {
+    "keywords": ["dhl", "hermes", "dpd", "ups", "fedex", "gls", "sendungsverfolgung", "versandbestätigung", "ihr paket", "lieferung"],
+    "folder": "Shopping/Pakete und Lieferungen",
+    "field": "subject"
+  },
+  {
+    "keywords": ["ebay", "kleinanzeigen", "vinted", "momox", "rebuy", "willhaben"],
+    "folder": "Shopping/Kleinanzeigen",
+    "field": "sender"
+  },
+  {
+    "keywords": ["werkstatt", "kfz", "hauptuntersuchung", "reifenwechsel", "inspektion", "fahrzeug", "tankstelle"],
+    "folder": "Auto/Autohaus Molnar",
+    "field": "subject"
+  },
+  {
+    "keywords": ["mobile.de", "autoscout24", "autohero", "wirkaufendeinauto", "autoankauf"],
+    "folder": "Auto/Autoverkauf und Suche",
+    "field": "sender"
+  },
+  {
+    "keywords": ["arzt", "termin", "praxis", "apotheke", "rezept", "krankenhaus", "klinik", "doctolib", "jameda", "onlinedoctor", "kieferorthopädie", "urologie", "orthopäde", "zahnarzt"],
+    "folder": "Persönlich/Gesundheit",
+    "field": "subject"
+  },
+  {
+    "keywords": ["aok", "krankenkasse", "barmer", "tkk", "techniker krankenkasse"],
+    "folder": "Persönlich/Gesundheit",
+    "field": "sender"
+  },
+  {
+    "keywords": ["booking", "airbnb", "hotel", "flug", "reise", "urlaub", "ryanair", "lufthansa", "easyjet", "ferienwohnung", "mietwagen", "eta application", "visum", "stansted", "ferry"],
+    "folder": "Persönlich/Urlaub und Reise",
+    "field": "subject"
+  },
+  {
+    "keywords": ["fewo-direkt", "swikly", "holiday", "trivago", "tripadvisor"],
+    "folder": "Persönlich/Urlaub und Reise",
+    "field": "sender"
+  },
+  {
+    "keywords": ["immobilien", "miete", "nebenkosten", "hausverwaltung", "grundbuch", "wohngebäude", "lichtensteinstr", "schwalbenstr"],
+    "folder": "Immobilien",
+    "field": "subject"
+  },
+  {
+    "keywords": ["schule", "lehrer", "noten", "vertretung", "elternabend", "kita", "kindergarten", "sdui", "geg", "schulinfo", "jugend forscht"],
+    "folder": "Kinder und Schule",
+    "field": "subject"
+  },
+  {
+    "keywords": ["tsv", "verein", "sport", "training", "mitgliedsbeitrag", "turnen", "fußball"],
+    "folder": "Vereine",
+    "field": "subject"
+  },
+  {
+    "keywords": ["ortschaftsrat", "gemeinde", "sitzung", "ratsinformation", "römerstein", "roemerstein", "landtagswahl"],
+    "folder": "Ehrenamt/Ortschaftsrat",
+    "field": "subject"
+  },
+  {
+    "keywords": ["strom", "gas", "wasser", "energie", "enbw", "tibber", "vattenfall", "stadtwerk", "zählerstand", "verbrauch", "abschlag", "stromrechnung", "schornsteinfeger", "pellets"],
+    "folder": "Haus und Energie",
+    "field": "subject"
+  },
+  {
+    "keywords": ["sperrmüll", "abfall", "müllabfuhr"],
+    "folder": "Haus und Energie",
+    "field": "subject"
+  },
+  {
+    "keywords": ["github", "gitlab", "npm", "docker", "aws", "firebase", "openai", "openrouter", "anthropic", "claude", "xai", "brave search", "anaconda", "overleaf"],
+    "folder": "Digital/Software und Lizenzen",
+    "field": "sender"
+  },
+  {
+    "keywords": ["lizenz", "subscription", "abo", "aktivierung", "lizenzkey", "software", "registrierung", "serial"],
+    "folder": "Digital/Software und Lizenzen",
+    "field": "subject"
+  },
+  {
+    "keywords": ["backup", "synology", "netzwerk", "router", "vpn", "octoeverywhere", "n8n"],
+    "folder": "Digital/Netzwerk und Backup",
+    "field": "subject"
+  },
+  {
+    "keywords": ["teamviewer", "bitwarden", "discord", "steam", "nvidia"],
+    "folder": "Digital/Software und Lizenzen",
+    "field": "sender"
+  },
+  {
+    "keywords": ["telekom", "vodafone", "o2", "1und1", "1&1", "sim24", "mobilfunk"],
+    "folder": "Online-Dienste/Telekom und Anbieter",
+    "field": "sender"
+  },
+  {
+    "keywords": ["strato", "ionos", "all-inkl", "webspace", "domain", "hosting", "ssl", "jimdo"],
+    "folder": "Online-Dienste/Web und Hosting",
+    "field": "sender"
+  },
+  {
+    "keywords": ["check24", "verivox", "vergleich"],
+    "folder": "Online-Dienste/Vergleichsportale",
+    "field": "sender"
+  },
+  {
+    "keywords": ["hd+", "hd-plus", "sky", "netflix", "waipu", "streaming"],
+    "folder": "Online-Dienste",
+    "field": "sender"
+  },
+  {
+    "keywords": ["paypal", "klarna", "stripe", "sofort", "giropay"],
+    "folder": "Finanzen/Zahlungen",
+    "field": "sender"
+  },
+  {
+    "keywords": ["heise", "ix magazin", "ct magazin", "heise academy"],
+    "folder": "Newsletter/Heise CT",
+    "field": "sender"
+  },
+  {
+    "keywords": ["medium.com", "substack"],
+    "folder": "Newsletter/Medium",
+    "field": "sender"
+  },
+  {
+    "keywords": ["newsletter", "unsubscribe", "abbestellen", "abmelden", "kündigen sie ab"],
+    "folder": "Newsletter",
+    "field": "subject"
+  },
+  {
+    "keywords": ["bewerbung", "stellenangebot", "karriere", "xing", "linkedin", "experteer", "arbeitsagentur"],
+    "folder": "Beruf/Bewerbung",
+    "field": "subject"
+  },
+  {
+    "keywords": ["weiterbildung", "kurs", "zertifikat", "schulung", "seminar", "udemy", "coursera", "qt academy", "heise academy"],
+    "folder": "Beruf/Weiterbildung",
+    "field": "subject"
+  },
+  {
+    "keywords": ["fierthbauer", "holzher"],
+    "folder": "Beruf",
+    "field": "sender"
+  },
+  {
+    "keywords": ["reisepass", "personalausweis", "ausweis", "visa", "passport"],
+    "folder": "Persönlich/Passes",
+    "field": "subject"
+  },
+  {
+    "keywords": ["garmin", "komoot", "strava", "playmobil", "k2 skis", "anycubic", "printables", "grillfürst"],
+    "folder": "Hobby",
+    "field": "sender"
+  },
+  {
+    "keywords": ["google play", "playstation", "meta quest", "oculus"],
+    "folder": "Hobby",
+    "field": "sender"
+  }
+]
