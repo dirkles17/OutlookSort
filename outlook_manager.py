@@ -577,9 +577,11 @@ class App(tk.Tk):
         self.sort_mode          = tk.StringVar(value="count")  # "count" | "alpha"
         self._display_order     = []
         self._current_display_idx = 0
+        self._recent_folders    = self._load_recent_folders()
 
         self._build_ui()
         self._bind_keys()
+        self._rebuild_quick_bar()
         self._connect_and_load()
 
     # ── UI ────────────────────────────────────
@@ -757,15 +759,9 @@ class App(tk.Tk):
                        activebackground="#1e1e2e",
                        font=("Segoe UI", 9)).pack(side=tk.LEFT, padx=8)
 
-        # Quick folders
-        qbar = tk.Frame(right, bg="#1e1e2e", pady=2)
-        qbar.pack(fill=tk.X)
-        tk.Label(qbar, text="Schnell:", bg="#1e1e2e", fg="#a6adc8",
-                 font=("Segoe UI", 8)).pack(side=tk.LEFT)
-        for label, path in QUICK_FOLDERS:
-            tk.Button(qbar, text=label, bg="#313244", fg="#cdd6f4",
-                      relief=tk.FLAT, font=("Segoe UI", 8), padx=5, pady=2,
-                      command=lambda p=path: self._quick_move(p)).pack(side=tk.LEFT, padx=1)
+        # Quick folders (dynamisch, zuletzt verwendet)
+        self.qbar = tk.Frame(right, bg="#1e1e2e", pady=2)
+        self.qbar.pack(fill=tk.X)
 
     def _bind_keys(self):
         for widget in (self, self.mail_lb, self.group_lb):
@@ -791,6 +787,9 @@ class App(tk.Tk):
         # Gruppenliste: Keyboard-Navigation nach oben/unten syncen
         self.group_lb.bind("<Down>", lambda e: self.after(0, self._sync_group_selection), add="+")
         self.group_lb.bind("<Up>",   lambda e: self.after(0, self._sync_group_selection), add="+")
+
+        # F-Keys werden nach _rebuild_quick_bar() gebunden
+        self._bind_fkeys()
 
     # ── Connect & Load ────────────────────────
 
@@ -1110,6 +1109,7 @@ class App(tk.Tk):
         try:
             moved, errors = self.bridge.move_items(target, dest)
             self.stats.record_move(email, dest, moved)
+            self._push_recent(dest)
             self.status_var.set(f"✓ {moved} Mails → {dest}")
             if self.save_rule_var.get() and not is_partial:
                 self.rules.add(email, "move", dest)
@@ -1160,6 +1160,64 @@ class App(tk.Tk):
     def _quick_move(self, path: str):
         self.dest_var.set(path)
         self._do_move()
+
+    # ── Recent Folders / Quick Bar ────────────
+
+    def _load_recent_folders(self) -> list:
+        try:
+            with open(STATS_FILE, "r", encoding="utf-8") as f:
+                return json.load(f).get("recent_folders", [])[:12]
+        except Exception:
+            return []
+
+    def _save_recent_folders(self):
+        try:
+            with open(STATS_FILE, "r", encoding="utf-8") as f:
+                d = json.load(f)
+        except Exception:
+            d = {}
+        d["recent_folders"] = self._recent_folders
+        with open(STATS_FILE, "w", encoding="utf-8") as f:
+            json.dump(d, f, indent=2, ensure_ascii=False)
+
+    def _push_recent(self, path: str):
+        if not path:
+            return
+        self._recent_folders = [path] + [f for f in self._recent_folders if f != path]
+        self._recent_folders = self._recent_folders[:12]
+        self._save_recent_folders()
+        self._rebuild_quick_bar()
+
+    def _rebuild_quick_bar(self):
+        for w in self.qbar.winfo_children():
+            w.destroy()
+        tk.Label(self.qbar, text="Schnell:", bg="#1e1e2e", fg="#a6adc8",
+                 font=("Segoe UI", 8)).pack(side=tk.LEFT)
+        if not self._recent_folders:
+            tk.Label(self.qbar, text="(noch keine — Ordner verwenden um Schnellzugriff zu füllen)",
+                     bg="#1e1e2e", fg="#6c7086", font=("Segoe UI", 8, "italic")).pack(side=tk.LEFT, padx=4)
+        for i, path in enumerate(self._recent_folders):
+            fnum  = i + 1
+            label = f"F{fnum} {path.split('/')[-1]}"
+            btn = tk.Button(self.qbar, text=label, bg="#313244", fg="#cdd6f4",
+                            relief=tk.FLAT, font=("Segoe UI", 8), padx=5, pady=2,
+                            command=lambda p=path: self._quick_move(p))
+            btn.pack(side=tk.LEFT, padx=1)
+            btn.bind("<Enter>", lambda e, p=path, b=btn: b.config(
+                bg="#45475a", fg="#cba6f7") or self.status_var.set(p))
+            btn.bind("<Leave>", lambda e, b=btn: b.config(bg="#313244", fg="#cdd6f4"))
+        self._bind_fkeys()
+
+    def _bind_fkeys(self):
+        for i in range(12):
+            fkey = f"<F{i + 1}>"
+            if i < len(self._recent_folders):
+                path = self._recent_folders[i]
+                for w in (self, self.mail_lb, self.group_lb):
+                    w.bind(fkey, lambda e, p=path: self._quick_move(p))
+            else:
+                for w in (self, self.mail_lb, self.group_lb):
+                    w.bind(fkey, lambda e: None)
 
     def _remove_current_group(self):
         display_idx = self._current_display_idx
