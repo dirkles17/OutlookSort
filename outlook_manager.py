@@ -842,16 +842,22 @@ class App(tk.Tk):
             display_groups = sorted(self.groups,
                                     key=lambda g: (g[1]["name"] or g[0]).lower())
         elif mode == "recent":
+            import calendar
             def _newest(g):
-                best = datetime.min
+                best = None
                 for item in g[1]["items"]:
                     try:
                         rt = item.ReceivedTime
-                        if rt > best:
+                        if best is None or rt > best:
                             best = rt
                     except Exception:
                         pass
-                return best
+                if best is None:
+                    return 0
+                try:
+                    return calendar.timegm(best.timetuple())
+                except Exception:
+                    return 0
             display_groups = sorted(self.groups, key=_newest, reverse=True)
         else:
             display_groups = self.groups  # already sorted by count from load_groups
