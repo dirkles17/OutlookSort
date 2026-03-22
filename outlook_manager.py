@@ -7,6 +7,9 @@ import tkinter as tk
 from tkinter import ttk, messagebox, scrolledtext
 import json
 import re
+import threading
+import calendar
+from collections import Counter
 from enum import Enum
 from pathlib import Path
 from datetime import datetime
@@ -550,6 +553,153 @@ class OutlookBridge:
 
 
 # ─────────────────────────────────────────────
+# Keyword Learner
+# ─────────────────────────────────────────────
+
+class KeywordLearner:
+    """Lernt Keywords aus bereits kategorisierten Ordnern via TF-IDF."""
+
+    STOP = {
+        # Deutsch
+        "der", "die", "das", "ein", "eine", "und", "oder", "für", "mit",
+        "auf", "ist", "im", "in", "an", "zu", "von", "bei", "aus", "wie",
+        "auch", "sich", "nach", "um", "den", "dem", "des", "haben", "hat",
+        "war", "wird", "werden", "nicht", "sie", "wir", "uns", "ihnen",
+        "ihre", "ihrer", "zum", "zur", "beim", "ohne", "bis", "noch",
+        "dann", "dass", "wenn", "aber", "hier", "mehr", "sehr", "nur",
+        "alle", "jetzt", "schon", "jede", "jeden", "jeder", "über",
+        "deine", "deinen", "deiner", "dein", "neue", "neuen", "neuer",
+        "ihre", "ihrem", "ihren", "ihrer", "liebe", "lieber", "bitte",
+        "danke", "mail", "betreff", "anbei", "hallo", "guten",
+        "fw", "aw", "fwd", "wg", "re",
+        # Englisch
+        "the", "a", "an", "and", "or", "for", "with", "on", "is", "at",
+        "to", "of", "by", "from", "as", "your", "you", "we", "our", "new",
+        "has", "have", "been", "be", "are", "that", "it", "not", "but",
+        "can", "will", "just", "about", "more", "all", "now", "get", "up",
+        "no", "via", "this", "which", "here", "there", "their", "its",
+        "hello", "dear", "please", "thank", "newsletter", "reply",
+        "message", "email", "noreply", "info", "update", "notification",
+    }
+
+    def __init__(self, bridge, keywords_file: Path, on_progress, on_done):
+        self.bridge         = bridge
+        self.keywords_file  = keywords_file
+        self.on_progress    = on_progress   # callback(str)
+        self.on_done        = on_done       # callback(new_rules, existing_rules, stats)
+
+    def _tokenize(self, text: str) -> list:
+        words = re.findall(r"[a-zA-ZäöüÄÖÜß]{4,}", text.lower())
+        return [w for w in words if w not in self.STOP]
+
+    def _iter_folders(self, folder, prefix=""):
+        for sub in folder.Folders:
+            name = sub.Name
+            path = f"{prefix}/{name}" if prefix else name
+            yield path, sub
+            yield from self._iter_folders(sub, path)
+
+    def _collect_subjects(self, folder, max_items=200) -> list:
+        subjects = []
+        count = 0
+        for item in folder.Items:
+            if count >= max_items:
+                break
+            count += 1
+            try:
+                if item.Class != 43:
+                    continue
+                s = getattr(item, "Subject", "") or ""
+                if s:
+                    subjects.append(s)
+            except Exception:
+                continue
+        return subjects
+
+    def run(self):
+        """Läuft im Hintergrund-Thread."""
+        inbox = self.bridge.inbox
+
+        # 1. Alle Unterordner sammeln
+        folder_list = list(self._iter_folders(inbox))
+        self.on_progress(f"📁 {len(folder_list)} Ordner gefunden\n\n")
+
+        # 2. Betreffs pro Ordner einlesen
+        folder_subjects: dict[str, list] = {}
+        for i, (path, folder) in enumerate(folder_list):
+            self.on_progress(f"[{i+1}/{len(folder_list)}]  {path} …")
+            try:
+                subjs = self._collect_subjects(folder)
+                if subjs:
+                    folder_subjects[path] = subjs
+                    self.on_progress(f"  {len(subjs)} Mails\n")
+                else:
+                    self.on_progress("  (leer)\n")
+            except Exception as e:
+                self.on_progress(f"  ⚠ {e}\n")
+
+        # 3. Wortfrequenz pro Ordner (Dokument-Frequenz, nicht Token-Frequenz)
+        self.on_progress("\n🔍 Berechne TF-IDF-Keywords …\n\n")
+        folder_wfreq: dict[str, Counter] = {}
+        global_counter: Counter = Counter()
+
+        for path, subjects in folder_subjects.items():
+            c = Counter()
+            for s in subjects:
+                c.update(set(self._tokenize(s)))   # 1× pro Mail
+            folder_wfreq[path] = c
+            global_counter.update(c.keys())
+
+        # 4. Bestehende Keywords laden
+        existing: list = []
+        if self.keywords_file.exists():
+            try:
+                with open(self.keywords_file, "r", encoding="utf-8") as f:
+                    existing = json.load(f)
+            except Exception:
+                pass
+
+        known: dict[str, set] = {}
+        for rule in existing:
+            fp = rule.get("folder", "")
+            known.setdefault(fp, set()).update(kw.lower() for kw in rule.get("keywords", []))
+
+        # 5. Kandidaten bewerten & filtern
+        new_rules: list = []
+        stats = {"folders": 0, "keywords": 0}
+
+        for path, counter in folder_wfreq.items():
+            n_docs = len(folder_subjects.get(path, []))
+            if n_docs < 3:
+                continue
+            candidates = []
+            for word, doc_freq in counter.items():
+                if doc_freq < 2:
+                    continue
+                global_freq = global_counter[word]
+                uniqueness  = doc_freq / global_freq     # 1.0 = nur dieser Ordner
+                doc_ratio   = doc_freq / n_docs
+                if doc_ratio >= 0.20 and uniqueness >= 0.45:
+                    candidates.append((word, uniqueness, doc_freq))
+
+            folder_known = known.get(path, set())
+            new_cands = [(w, s, f) for w, s, f in candidates if w not in folder_known]
+            if not new_cands:
+                continue
+
+            top_kw = [w for w, _, _ in sorted(new_cands, key=lambda x: x[1], reverse=True)[:10]]
+            new_rules.append({"keywords": top_kw, "folder": path,
+                               "field": "subject", "_learned": True})
+            stats["folders"] += 1
+            stats["keywords"] += len(top_kw)
+            self.on_progress(f"  ✓  {path}\n     {', '.join(top_kw)}\n")
+
+        self.on_progress(f"\n✅ Fertig: {stats['folders']} Ordner, "
+                         f"{stats['keywords']} neue Keywords\n")
+        self.on_done(new_rules, existing, stats)
+
+
+# ─────────────────────────────────────────────
 # Main GUI
 # ─────────────────────────────────────────────
 
@@ -627,6 +777,9 @@ class App(tk.Tk):
                   font=("Segoe UI", 9), padx=6).pack(side=tk.LEFT, padx=2)
         tk.Button(bar, text=" Statistik ", command=self._open_stats,
                   bg="#89dceb", fg="#1e1e2e", relief=tk.FLAT,
+                  font=("Segoe UI", 9), padx=6).pack(side=tk.LEFT, padx=2)
+        tk.Button(bar, text=" 🧠 Keywords lernen ", command=self._open_learner,
+                  bg="#f9e2af", fg="#1e1e2e", relief=tk.FLAT,
                   font=("Segoe UI", 9), padx=6).pack(side=tk.LEFT, padx=2)
 
         self.status_var = tk.StringVar(value="Verbinde…")
@@ -1339,6 +1492,114 @@ class App(tk.Tk):
         tk.Button(win, text="Schließen", command=win.destroy,
                   bg="#313244", fg="#cdd6f4", relief=tk.FLAT,
                   font=("Segoe UI", 9), padx=8).pack(pady=6)
+
+    # ── Keyword Learner Dialog ─────────────────
+
+    def _open_learner(self):
+        win = tk.Toplevel(self)
+        win.title("🧠 Keywords lernen")
+        win.geometry("820x620")
+        win.configure(bg="#1e1e2e")
+        win.resizable(True, True)
+
+        tk.Label(win, text="Keyword-Lernvorgang",
+                 bg="#1e1e2e", fg="#f9e2af",
+                 font=("Segoe UI", 11, "bold")).pack(anchor=tk.W, padx=12, pady=(10, 2))
+        tk.Label(win,
+                 text="Analysiert alle kategorisierten Ordner und leitet spezifische Keywords ab (TF-IDF).",
+                 bg="#1e1e2e", fg="#a6adc8",
+                 font=("Segoe UI", 9, "italic")).pack(anchor=tk.W, padx=12, pady=(0, 6))
+
+        # Progress bar
+        pbar = ttk.Progressbar(win, mode="indeterminate", length=400)
+        pbar.pack(fill=tk.X, padx=12, pady=(0, 4))
+
+        # Log
+        log = scrolledtext.ScrolledText(
+            win, bg="#181825", fg="#cdd6f4",
+            font=("Consolas", 9), relief=tk.FLAT, wrap=tk.WORD,
+            highlightthickness=0, padx=8, pady=6, state=tk.DISABLED
+        )
+        log.pack(fill=tk.BOTH, expand=True, padx=12, pady=4)
+
+        # Result preview (hidden initially)
+        preview_frame = tk.Frame(win, bg="#1e1e2e")
+
+        # Button bar
+        bbar = tk.Frame(win, bg="#1e1e2e", pady=6)
+        bbar.pack(fill=tk.X, padx=12)
+
+        self._learner_result = None
+
+        def _log(msg: str):
+            win.after(0, lambda: (
+                log.configure(state=tk.NORMAL),
+                log.insert(tk.END, msg),
+                log.see(tk.END),
+                log.configure(state=tk.DISABLED)
+            ))
+
+        def _on_done(new_rules, existing_rules, stats):
+            self._learner_result = (new_rules, existing_rules)
+            win.after(0, lambda: _finish(new_rules, stats))
+
+        def _finish(new_rules, stats):
+            pbar.stop()
+            pbar.configure(mode="determinate", value=100)
+            btn_start.configure(state=tk.NORMAL, text=" 🧠 Erneut lernen ")
+            if new_rules:
+                btn_apply.configure(state=tk.NORMAL)
+                _log(f"\n→ {len(new_rules)} Ordner mit neuen Keywords bereit zum Übernehmen.\n")
+            else:
+                _log("\n→ Keine neuen Keywords gefunden (alle bereits bekannt).\n")
+
+        def _start():
+            if not self.bridge.inbox:
+                messagebox.showerror("Fehler", "Nicht mit Outlook verbunden.", parent=win)
+                return
+            log.configure(state=tk.NORMAL)
+            log.delete("1.0", tk.END)
+            log.configure(state=tk.DISABLED)
+            btn_start.configure(state=tk.DISABLED, text=" läuft… ")
+            btn_apply.configure(state=tk.DISABLED)
+            pbar.configure(mode="indeterminate")
+            pbar.start(12)
+            learner = KeywordLearner(self.bridge, KEYWORDS_FILE, _log, _on_done)
+            threading.Thread(target=learner.run, daemon=True).start()
+
+        def _apply():
+            if not self._learner_result:
+                return
+            new_rules, existing_rules = self._learner_result
+            # Learned rules anhängen (ohne Duplikate)
+            existing_folders = {r.get("folder") for r in existing_rules
+                                 if not r.get("_learned")}
+            merged = [r for r in existing_rules if not r.get("_learned")]
+            added = 0
+            for rule in new_rules:
+                merged.append(rule)
+                added += 1
+            with open(KEYWORDS_FILE, "w", encoding="utf-8") as f:
+                json.dump(merged, f, indent=2, ensure_ascii=False)
+            self.suggeng.reload()
+            btn_apply.configure(state=tk.DISABLED)
+            _log(f"\n✅ {added} Keyword-Regeln in outlook_keywords.json gespeichert.\n"
+                 f"   Suggestion-Engine neu geladen.\n")
+
+        btn_start = tk.Button(bbar, text=" 🧠 Lernen starten ",
+                              bg="#f9e2af", fg="#1e1e2e", relief=tk.FLAT,
+                              font=("Segoe UI", 9, "bold"), padx=8, command=_start)
+        btn_start.pack(side=tk.LEFT, padx=(0, 6))
+
+        btn_apply = tk.Button(bbar, text=" ✅ Keywords übernehmen ",
+                              bg="#a6e3a1", fg="#1e1e2e", relief=tk.FLAT,
+                              font=("Segoe UI", 9, "bold"), padx=8,
+                              command=_apply, state=tk.DISABLED)
+        btn_apply.pack(side=tk.LEFT, padx=2)
+
+        tk.Button(bbar, text="Schließen", command=win.destroy,
+                  bg="#313244", fg="#cdd6f4", relief=tk.FLAT,
+                  font=("Segoe UI", 9), padx=8).pack(side=tk.RIGHT)
 
     # ── Rules Window ──────────────────────────
 
