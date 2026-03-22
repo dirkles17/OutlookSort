@@ -72,6 +72,14 @@ ALL_FOLDERS = [
     "Newsletter",
     "Newsletter/Heise CT",
     "Newsletter/Medium",
+    "Familie",
+    "Familie/Julia",
+    "Familie/Hannes",
+    "Familie/Martina und Steffen",
+    "Familie/Peter Koval",
+    "Familie/Archiv",
+    "Kirche",
+    "Persönlich/Genealogie",
     "_Archiv",
 ]
 
@@ -90,6 +98,8 @@ QUICK_FOLDERS = [
     ("Kinder",     "Kinder und Schule"),
     ("Ehrenamt",   "Ehrenamt/Ortschaftsrat"),
     ("Heise",      "Newsletter/Heise CT"),
+    ("Familie",    "Familie"),
+    ("Kirche",     "Kirche"),
     ("Archiv",     "_Archiv"),
 ]
 

@@ -193,5 +193,45 @@
     "keywords": ["google play", "playstation", "meta quest", "oculus"],
     "folder": "Hobby",
     "field": "sender"
+  },
+  {
+    "keywords": ["schillerjulia@gmx.de"],
+    "folder": "Familie/Julia",
+    "field": "sender"
+  },
+  {
+    "keywords": ["schiller-hannes@web.de", "hannes.schiller.17@gmail.com", "hannes@schiller-roemerstein.de"],
+    "folder": "Familie/Hannes",
+    "field": "sender"
+  },
+  {
+    "keywords": ["tini.schmid@icloud.com", "tini.schmid@me.com", "home@schmid-web.eu"],
+    "folder": "Familie/Martina und Steffen",
+    "field": "sender"
+  },
+  {
+    "keywords": ["peter@peterkoval.com"],
+    "folder": "Familie/Peter Koval",
+    "field": "sender"
+  },
+  {
+    "keywords": ["schiller.inge@web.de"],
+    "folder": "Familie/Archiv",
+    "field": "sender"
+  },
+  {
+    "keywords": ["churchtools"],
+    "folder": "Kirche",
+    "field": "sender"
+  },
+  {
+    "keywords": ["familysearch"],
+    "folder": "Persönlich/Genealogie",
+    "field": "sender"
+  },
+  {
+    "keywords": ["voba-ermstal-alb", "union-investment", "vhv.de", "dkb@ag.de"],
+    "folder": "Finanzen/Bank und Versicherung",
+    "field": "sender"
   }
 ]

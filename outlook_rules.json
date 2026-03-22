@@ -513,5 +513,80 @@
     "pattern": "no-reply@simplybook.me",
     "action": "move",
     "dest": "Persönlich/Urlaub und Reise"
+  },
+  {
+    "pattern": "schillerjulia@gmx.de",
+    "action": "move",
+    "dest": "Familie/Julia"
+  },
+  {
+    "pattern": "schiller-hannes@web.de",
+    "action": "move",
+    "dest": "Familie/Hannes"
+  },
+  {
+    "pattern": "hannes.schiller.17@gmail.com",
+    "action": "move",
+    "dest": "Familie/Hannes"
+  },
+  {
+    "pattern": "hannes@schiller-roemerstein.de",
+    "action": "move",
+    "dest": "Familie/Hannes"
+  },
+  {
+    "pattern": "tini.schmid@icloud.com",
+    "action": "move",
+    "dest": "Familie/Martina und Steffen"
+  },
+  {
+    "pattern": "tini.schmid@me.com",
+    "action": "move",
+    "dest": "Familie/Martina und Steffen"
+  },
+  {
+    "pattern": "home@schmid-web.eu",
+    "action": "move",
+    "dest": "Familie/Martina und Steffen"
+  },
+  {
+    "pattern": "peter@peterkoval.com",
+    "action": "move",
+    "dest": "Familie/Peter Koval"
+  },
+  {
+    "pattern": "schiller.inge@web.de",
+    "action": "move",
+    "dest": "Familie/Archiv"
+  },
+  {
+    "pattern": "noreply@churchtools.de",
+    "action": "move",
+    "dest": "Kirche"
+  },
+  {
+    "pattern": "reply@e.familysearch.org",
+    "action": "move",
+    "dest": "Persönlich/Genealogie"
+  },
+  {
+    "pattern": "info@voba-ermstal-alb.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "joshua.kehl@voba-ermstal-alb.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "service@union-investment.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
+  },
+  {
+    "pattern": "direktonlineteam@vhv.de",
+    "action": "move",
+    "dest": "Finanzen/Bank und Versicherung"
   }
 ]
